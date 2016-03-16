@@ -4,7 +4,7 @@ module.exports = function(grunt){
 		pkg: grunt.file.readJSON('package.json'),
 
 		banner: '/*\n' +
-			' * <%= pkg.name %> - version <%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %>\n' +
+			' * <%= pkg.name %> - version <%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
 			' * <%= pkg.author %>\n' +
 			' */',
 		
