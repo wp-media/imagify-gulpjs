@@ -1,0 +1,19 @@
+{
+  "name": "imagify-gulpjs",
+  "version": "0.0.1",
+  "description": "Script For Imagify WordPress Plugin",
+  "main": "dist/imagify-gulp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wp-media/imagify-gulpjs.git"
+  },
+  "author": "WP Media <contact@wp-media.me>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wp-media/imagify-gulpjs/issues"
+  },
+  "homepage": "https://github.com/wp-media/imagify-gulpjs#readme"
+}
