@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/imagify-gulp.js"],"names":[],"mappings":"AAAA;;;;IAEM,cAEL,SAFK,WAEL,GAAe;uBAFV,aAEU;CAAf","file":"imagify-gulp.js","sourcesContent":["'use strict'\n\nclass ImagifyGulp {\n\n\tconstructor () {\n\t}\n\n}"]}
