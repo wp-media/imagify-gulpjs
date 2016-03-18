@@ -25,7 +25,5 @@
     "grunt-contrib-watch": "latest",
     "grunt-notify": "^0.4.1"
   },
-  "dependencies": {
-    "babel-plugin-transform-es2015-modules-umd": "^6.6.5"
-  }
+  "dependencies": {}
 }

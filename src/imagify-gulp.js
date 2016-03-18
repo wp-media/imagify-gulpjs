@@ -26,18 +26,22 @@ class ImagifyGulp {
 
 	before (fnc) {
 		this._before = fnc
+		return this
 	}
 
 	each (fnc) {
 		this._each = fnc
+		return this
 	}
 
 	done (fnc) {
 		this._done = fnc
+		return this
 	}
 
 	error (fnc) {
 		this._error = fnc
+		return this
 	}
 
 	humanSize (bytes) {
@@ -57,6 +61,8 @@ class ImagifyGulp {
 			let id = this.images_ids.shift()
 			this.process(id)
 		}
+
+		return this
 	}
 
 	process (id) {
