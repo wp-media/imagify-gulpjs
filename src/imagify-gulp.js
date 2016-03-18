@@ -97,6 +97,7 @@ class ImagifyGulp {
 				, newHeight   = 0
 				, newWidth    = 0
 				, canvas      = null
+				, ctx         = null
 
 			if ( imageWidth < imageHeight ) {
 				ratio     = maxWidth / imageWidth
@@ -153,10 +154,8 @@ class ImagifyGulp {
 					err = false
 				} catch (e) {
 
-					response = {
-						success: false,
-						error: 'An error occured'
-					}
+					response.success = false
+					response.error   = 'An error occured'
 
 					err = true
 
@@ -165,9 +164,7 @@ class ImagifyGulp {
 				if (!err) {
 					let json_data = json.data
 
-					response = {
-						success: json.success
-					}
+					response.success = json.success
 
 					if ( json.success === true ) {
 

@@ -7,10 +7,14 @@ $response = [
 	'data'    => []
 ];
 
+$image_name = 0;
+
 for ( $i=1; $i < 30; $i++ ) { 
-	$response['data']['_'.$i] = 'http://www.domain.tld/images/' . $i . '.jpg';
+	$image_name++;
+
+	if ($image_name > 4) $image_name = 1;
+
+	$response['data']['_'.$i] = 'images/' . $image_name . '.jpg';
 }
 
 echo json_encode( $response );
-
-?>

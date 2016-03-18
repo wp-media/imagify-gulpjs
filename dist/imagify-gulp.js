@@ -37,21 +37,25 @@ var ImagifyGulp = function () {
 		key: 'before',
 		value: function before(fnc) {
 			this._before = fnc;
+			return this;
 		}
 	}, {
 		key: 'each',
 		value: function each(fnc) {
 			this._each = fnc;
+			return this;
 		}
 	}, {
 		key: 'done',
 		value: function done(fnc) {
 			this._done = fnc;
+			return this;
 		}
 	}, {
 		key: 'error',
 		value: function error(fnc) {
 			this._error = fnc;
+			return this;
 		}
 	}, {
 		key: 'humanSize',
@@ -72,6 +76,8 @@ var ImagifyGulp = function () {
 				var id = this.images_ids.shift();
 				this.process(id);
 			}
+
+			return this;
 		}
 	}, {
 		key: 'process',
@@ -105,7 +111,8 @@ var ImagifyGulp = function () {
 				    ratio = 1,
 				    newHeight = 0,
 				    newWidth = 0,
-				    canvas = null;
+				    canvas = null,
+				    ctx = null;
 
 				if (imageWidth < imageHeight) {
 					ratio = maxWidth / imageWidth;
@@ -162,10 +169,8 @@ var ImagifyGulp = function () {
 						err = false;
 					} catch (e) {
 
-						response = {
-							success: false,
-							error: 'An error occured'
-						};
+						response.success = false;
+						response.error = 'An error occured';
 
 						err = true;
 					}
@@ -173,9 +178,7 @@ var ImagifyGulp = function () {
 					if (!err) {
 						var json_data = json.data;
 
-						response = {
-							success: json.success
-						};
+						response.success = json.success;
 
 						if (json.success === true) {
 
