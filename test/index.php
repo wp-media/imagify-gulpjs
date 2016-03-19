@@ -22,13 +22,12 @@
 		.progress{
 			margin-top: 1em;
 		}
-		em{
+		strong{
 			display: inline-block;
 			margin-left: 1em;
 			text-transform: uppercase;
 			font-weight: bold;
 			font-size: .6em;
-			color: #aaa;
 		}
 		#list-images{
 			list-style-type: none;
@@ -41,7 +40,8 @@
 			background-color: #6CB586;
 			color: white;
 		}
-		#list-images li.done em{
+		#list-images li.error{
+			background-color: #e74c3c;
 			color: white;
 		}
 	</style>
@@ -65,10 +65,6 @@
 		$('#btn-launch-test').click( launchTest );
 
 		function launchTest () {
-
-			var
-				images_total = 0
-				image_count  = 0;
 			
 			$(this).prop('disabled', true);
 
@@ -83,15 +79,18 @@
 
 				Gulp
 					.before( function (data) {
-						$('#list-images').append('<li id="img' + data.id + '"><img src="' + data.thumbnail + '" height="33" width="33"> ' + data.image_name + ' <em>Processing...</em></li>');
+						$('#list-images').append('<li id="img' + data.id + '"><img src="' + data.thumbnail + '" height="33" width="33"> ' + data.image_name + ' <strong>Processing...</strong></li>');
 					})
 					.each( function (data) {
-						image_count++;
+						console.log(data);
 
-						var percent = Math.floor( (image_count / images_total) * 100 ) + '%';
-						$('.progress-bar').width( percent ).text( percent );
+						$('.progress-bar').width( data.progress + '%' ).text( data.progress + '%' );
 
-						$('#img' + data.image).addClass('done').find('em').html('DONE');
+						if ( data.success === true ) {
+							$('#img' + data.image).addClass( 'done' ).find('strong').html( data.original_size_human + ' -> ' + data.new_size_human + ' (' + data.percent + '%)' );
+						} else {
+							$('#img' + data.image).addClass( 'error' ).find('strong').html( data.error );
+						}
 					})
 					.done( function (data) {
 

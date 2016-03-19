@@ -136,13 +136,17 @@ class ImagifyGulp {
 	}
 
 	send (data) {
+		
+		this.processed_images++
+
 		let 
 			self        = this
 			, transport = new XMLHttpRequest
 			, err       = false
 			, json      = {}
 			, response  = {
-				progress: Math.floor( (self.processed_images + 1) / self.total_images ),
+				progress: Math.floor( self.processed_images / self.total_images ) * 100,
+				filename: data.image_name,
 				image: data.id
 			}
 
@@ -161,7 +165,7 @@ class ImagifyGulp {
 
 				}
 
-				if (!err) {
+				if ( !err ) {
 					let json_data = json.data
 
 					response.success = json.success
@@ -177,9 +181,14 @@ class ImagifyGulp {
 						self.global_gain           += json_data.overall_saving
 						self.global_percent         = (100 - ((self.global_optimized_size / self.global_optimized_size) * 100)).toFixed(2)
 
+						response.original_size         = json_data.original_size
 						response.original_size_human   = self.humanSize(json_data.original_size)
+						
+						response.new_size              = json_data.new_size
 						response.new_size_human        = self.humanSize(json_data.new_size)
-						response.percent               =  (100 - ((json_data.new_size / json_data.original_size) * 100)).toFixed(2)
+						
+						//response.percent               =  (100 - ((json_data.new_size / json_data.original_size) * 100)).toFixed(2)
+						response.percent               = json_data.percent
 						response.thumbnails            = json_data.thumbnails
 						response.overall_saving        = json_data.overall_saving
 						response.original_overall_size = json_data.original_overall_size
