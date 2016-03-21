@@ -9,7 +9,7 @@ $response = [
 
 $image_name = 0;
 
-for ( $i=1; $i < 30; $i++ ) { 
+for ( $i=1; $i <= 30; $i++ ) { 
 	$image_name++;
 
 	if ($image_name > 4) $image_name = 1;

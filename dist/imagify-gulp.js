@@ -1,5 +1,5 @@
 /*
- * imagify-gulpjs - version 0.0.1 - 2016-03-18
+ * imagify-gulpjs - version 0.0.1 - 2016-03-21
  * WP Media <contact@wp-media.me>
  */
 'use strict';
@@ -153,14 +153,11 @@ var ImagifyGulp = function () {
 		key: 'send',
 		value: function send(data) {
 
-			this.processed_images++;
-
 			var self = this,
 			    transport = new XMLHttpRequest(),
 			    err = false,
 			    json = {},
 			    response = {
-				progress: Math.floor(self.processed_images / self.total_images) * 100,
 				filename: data.image_name,
 				image: data.id
 			};
@@ -178,6 +175,9 @@ var ImagifyGulp = function () {
 
 						err = true;
 					}
+
+					self.processed_images++;
+					response.progress = Math.floor(self.processed_images / self.total_images * 100);
 
 					if (!err) {
 						var json_data = json.data;

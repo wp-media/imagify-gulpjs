@@ -136,8 +136,6 @@ class ImagifyGulp {
 	}
 
 	send (data) {
-		
-		this.processed_images++
 
 		let 
 			self        = this
@@ -145,7 +143,6 @@ class ImagifyGulp {
 			, err       = false
 			, json      = {}
 			, response  = {
-				progress: Math.floor( self.processed_images / self.total_images ) * 100,
 				filename: data.image_name,
 				image: data.id
 			}
@@ -164,6 +161,9 @@ class ImagifyGulp {
 					err = true
 
 				}
+
+				self.processed_images++
+				response.progress = Math.floor( ( self.processed_images / self.total_images ) * 100 )
 
 				if ( !err ) {
 					let json_data = json.data
