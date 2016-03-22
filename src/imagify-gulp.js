@@ -10,6 +10,7 @@ class ImagifyGulp {
 		this.images_ids            = Object.keys( settings.images )
 		this.total_images          = this.images_ids.length
 		this.processed_images      = 0
+		this.inprocess_images      = 0
 		this._before               = new Function
 		this._each                 = new Function
 		this._done                 = new Function
@@ -66,12 +67,14 @@ class ImagifyGulp {
 	}
 
 	process (id) {
+		this.inprocess_images++
+
 		let data = {
 			id: id,
 			image_id: parseInt( id.toString().substr(1) ),
 			image_src: this.images[id],
 			filename: this.images[id].split('/').pop(),
-			thumbnail: this.default_thumbhumb,
+			thumbnail: this.default_thumb,
 			error: ''
 		}
 		
@@ -86,8 +89,6 @@ class ImagifyGulp {
 		image.onerror = function () {
 			let data_before = data 
 			data_before.id  = data.image_id
-			
-			console.log('BEFORE: ', data_before)
 			
 			self._before(data_before)
 			self.send(data)
@@ -160,6 +161,8 @@ class ImagifyGulp {
 		transport.onreadystatechange = function () {
 			if ( this.readyState === 4 ) {
 
+				self.processed_images++
+
 				try {
 					json = JSON.parse( this.responseText )
 					err = false
@@ -172,7 +175,6 @@ class ImagifyGulp {
 
 				}
 
-				self.processed_images++
 				response.progress = Math.floor( ( self.processed_images / self.total_images ) * 100 )
 
 				if ( !err ) {
@@ -210,31 +212,20 @@ class ImagifyGulp {
 						response.error = json_data.error
 					}
 				}
-
-				console.log('EACH: ', response);
 					
 				self._each(response)
 
-				//delete self.images[ data.id ]
-
-				if ( self.images_ids.length > 0 ) {
-
+				if ( self.inprocess_images < self.total_images ) {
 					self.process( self.images_ids.shift() )
-					console.log('IMAGES LEFT (' + self.images_ids.length + '): ', self.images_ids)
+				}
 
-				} else {
+				if ( self.processed_images == self.total_images ) {
 
 					let tmp_global_percent = 0
 					
 					if ( self.global_original_size != 0 ) {
 						tmp_global_percent = ( ( 100 - ( 100 * ( self.global_optimized_size / self.global_original_size ) ) ).toFixed(2) )
 					}
-
-					console.log('DONE!', {
-						global_original_size_human : self.humanSize( self.global_original_size ),
-						global_gain_human          : self.humanSize( self.global_gain ),
-						global_percent             : tmp_global_percent
-					});
 
 					self._done({
 						global_original_size_human : self.humanSize( self.global_original_size ),

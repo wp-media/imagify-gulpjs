@@ -12,13 +12,14 @@ var ImagifyGulp = function () {
 	function ImagifyGulp(settings) {
 		_classCallCheck(this, ImagifyGulp);
 
-		this.buffer_size = 1;
+		this.buffer_size = 5;
 		this.lib_url = settings.lib;
 		this.default_thumb = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAIAAACRuyQOAAACy0lEQVRIx+1XS1PTUBTuT/MB1NGF3bhyhys3Pv+Ai8pCF6Bb3bsWq8xAh8441I2TSlKwPIKQJsI40IbSV0pJ6qe3OeZ1b9PaYViQyaJzc+757j3nO985TVx5v3o+b+IS6XyQUgtrj/NqWtJmZf3lavnpl53bC2vjRLqRUV4pxqbZcnrBx3F6G2ZzTjFg879IMwWtanV7g56K1Z2RtBGRpj7IWb0a8HhqOz9O2rjHfrOD34GvWcPEruGQkhmlcFgnF7bjABVJmvA4uj4vY2VJr545/yClw/okBywaadF/m63j1gT/sNO5DbXW8t4sLtJzSQtnAme/ys/BrU9FpdIgY2R3MBLidtQ+ZRt2T9qZvQrtf/N9X5BwbEQKmSVIFGZjEGlWNojB93KbCBolDNl49nVPAIYwUs5QGAOQwCtmuuyGG5ExGhZbtM7s+5+3BGC5nyazhB8RElSAePRwRaX1u9nScadfVYjtncV1HtKDlW0KQMqvID4kCAydHST2fgKhu24B7dTaSY4oYBf2MjN44yK9+FZmRnrdCnuhr3jyB7Vr89G8L9f7oU77VSPhp4POjNarzUgv77Z/ERh+R9oUXbqDXFyktFtJ5ag74cU9cBsCwy3DNoht5Fcf0pO8ysuTt27IFzKH/Hm/Qopi5ekP99zzgkU8goF7VN21ThfM9BKHylHEPbzoQ8wUlSGoG1QVnR3Vhppj66hCtgg/Ayr3tdLXCFQ7al4ABr2gAEBHoCbQFDu+RkCvqPVBx5LCZvq2dEDsgELuDqV7rM/SfvmocfNjkYcEdV8Kdcu4Wh6QLzzoPQKtQ9DQvQL9ZYhOiCYteXougo/9UEIv9YHxKK+iZ9qenouE8QIunCMMMzxHYIIomU2ksBOaI5ZHmCO8OavEnI0K2hjmvTnevPe3bjBlTvKvMsoMi4kVAgO/qBXMGvidGu8Me/lf4yIg/QYbLcmjDg4bKwAAAABJRU5ErkJggg==";
 		this.images = settings.images;
 		this.images_ids = Object.keys(settings.images);
 		this.total_images = this.images_ids.length;
 		this.processed_images = 0;
+		this.inprocess_images = 0;
 		this._before = new Function();
 		this._each = new Function();
 		this._done = new Function();
@@ -72,7 +73,7 @@ var ImagifyGulp = function () {
 		value: function run() {
 			var cpt = this.images_ids.length > this.buffer_size ? this.buffer_size : this.images_ids.length;
 
-			for (var i = 0; i <= cpt; i++) {
+			for (var i = 0; i < cpt; i++) {
 				var id = this.images_ids.shift();
 				this.process(id);
 			}
@@ -82,12 +83,14 @@ var ImagifyGulp = function () {
 	}, {
 		key: 'process',
 		value: function process(id) {
+			this.inprocess_images++;
+
 			var data = {
 				id: id,
 				image_id: parseInt(id.toString().substr(1)),
 				image_src: this.images[id],
 				filename: this.images[id].split('/').pop(),
-				thumbnail: this.default_thumbhumb,
+				thumbnail: this.default_thumb,
 				error: ''
 			};
 
@@ -100,7 +103,10 @@ var ImagifyGulp = function () {
 			    image = new Image();
 
 			image.onerror = function () {
-				self._before(data);
+				var data_before = data;
+				data_before.id = data.image_id;
+
+				self._before(data_before);
 				self.send(data);
 			};
 
@@ -141,7 +147,10 @@ var ImagifyGulp = function () {
 					data.thumbnail = self.default_thumb;
 				}
 
-				self._before(data);
+				var before_data = data;
+				before_data.id = data.image_id;
+
+				self._before(before_data);
 
 				self.send(data);
 
@@ -160,11 +169,14 @@ var ImagifyGulp = function () {
 			    json = {},
 			    response = {
 				filename: data.filename,
-				image: data.id
+				image: data.image_id,
+				error: ''
 			};
 
 			transport.onreadystatechange = function () {
 				if (this.readyState === 4) {
+
+					self.processed_images++;
 
 					try {
 						json = JSON.parse(this.responseText);
@@ -177,7 +189,6 @@ var ImagifyGulp = function () {
 						err = true;
 					}
 
-					self.processed_images++;
 					response.progress = Math.floor(self.processed_images / self.total_images * 100);
 
 					if (!err) {
@@ -202,11 +213,14 @@ var ImagifyGulp = function () {
 							response.new_size = json_data.new_size;
 							response.new_size_human = self.humanSize(json_data.new_size);
 
-							//response.percent               =  (100 - ((json_data.new_size / json_data.original_size) * 100)).toFixed(2)
 							response.percent = json_data.percent;
 							response.thumbnails = json_data.thumbnails;
+
 							response.overall_saving = json_data.overall_saving;
+							response.overall_saving_human = self.humanSize(json_data.overall_saving);
+
 							response.original_overall_size = json_data.original_overall_size;
+							response.original_overall_size_human = self.humanSize(json_data.original_overall_size);
 						} else {
 							response.error = json_data.error;
 						}
@@ -214,12 +228,11 @@ var ImagifyGulp = function () {
 
 					self._each(response);
 
-					delete self.images[data.id];
-
-					if (self.images_ids.length > 0) {
-
+					if (self.inprocess_images < self.total_images) {
 						self.process(self.images_ids.shift());
-					} else {
+					}
+
+					if (self.processed_images == self.total_images) {
 
 						var tmp_global_percent = 0;
 
@@ -238,7 +251,7 @@ var ImagifyGulp = function () {
 
 			transport.open('POST', this.lib_url, true);
 			transport.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			transport.send('image=' + data.id);
+			transport.send('image=' + data.image_id);
 		}
 	}]);
 

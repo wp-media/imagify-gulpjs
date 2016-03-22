@@ -70,7 +70,7 @@
 
 			$.get('get_images.php').then( function (response) {
 
-				images_total = Object.keys( response.data ).length;
+				console.log( 'IMAGES: ' + Object.keys( response.data ).length );
 				
 				var Gulp = new ImagifyGulp({
 					lib: 'optimize.php',
@@ -79,11 +79,9 @@
 
 				Gulp
 					.before( function (data) {
-						$('#list-images').append('<li id="img' + data.id + '"><img src="' + data.thumbnail + '" height="33" width="33"> ' + data.image_name + ' <strong>Processing...</strong></li>');
+						$('#list-images').append('<li id="img' + data.id + '"><img src="' + data.thumbnail + '" height="33" width="33"> ' + data.filename + ' <strong>Processing...</strong></li>');
 					})
 					.each( function (data) {
-						console.log(data);
-
 						$('.progress-bar').width( data.progress + '%' ).text( data.progress + '%' );
 
 						if ( data.success === true ) {
@@ -93,7 +91,7 @@
 						}
 					})
 					.done( function (data) {
-
+						console.log('DONE!')
 					})
 					.run();
 
