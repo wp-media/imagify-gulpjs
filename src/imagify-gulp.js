@@ -70,7 +70,9 @@ class ImagifyGulp {
 			id: id,
 			image_id: parseInt( id.toString().substr(1) ),
 			image_src: this.images[id],
-			image_name: this.images[id].split('/').pop()
+			filename: this.images[id].split('/').pop(),
+			thumbnail: this.default_thumbhumb,
+			error: ''
 		}
 		
 		this.createThumb(data)
@@ -82,7 +84,6 @@ class ImagifyGulp {
 			, image = new Image
 
 		image.onerror = function () {
-			data.thumbnail = self.default_thumbhumb
 			self._before(data)
 			self.send(data)
 		}
@@ -143,7 +144,7 @@ class ImagifyGulp {
 			, err       = false
 			, json      = {}
 			, response  = {
-				filename: data.image_name,
+				filename: data.filename,
 				image: data.id
 			}
 
@@ -156,7 +157,7 @@ class ImagifyGulp {
 				} catch (e) {
 
 					response.success = false
-					response.error   = 'An error occured'
+					response.error   = 'Unknown error occured'
 
 					err = true
 
@@ -200,7 +201,7 @@ class ImagifyGulp {
 					
 				self._each(response)
 
-				delete self.images[ data.image_id ]
+				delete self.images[ data.id ]
 
 				if ( self.images_ids.length > 0 ) {
 

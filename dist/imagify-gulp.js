@@ -1,5 +1,5 @@
 /*
- * imagify-gulpjs - version 0.0.1 - 2016-03-21
+ * imagify-gulpjs - version 0.0.1 - 2016-03-22
  * WP Media <contact@wp-media.me>
  */
 'use strict';
@@ -86,7 +86,9 @@ var ImagifyGulp = function () {
 				id: id,
 				image_id: parseInt(id.toString().substr(1)),
 				image_src: this.images[id],
-				image_name: this.images[id].split('/').pop()
+				filename: this.images[id].split('/').pop(),
+				thumbnail: this.default_thumbhumb,
+				error: ''
 			};
 
 			this.createThumb(data);
@@ -98,7 +100,6 @@ var ImagifyGulp = function () {
 			    image = new Image();
 
 			image.onerror = function () {
-				data.thumbnail = self.default_thumbhumb;
 				self._before(data);
 				self.send(data);
 			};
@@ -158,7 +159,7 @@ var ImagifyGulp = function () {
 			    err = false,
 			    json = {},
 			    response = {
-				filename: data.image_name,
+				filename: data.filename,
 				image: data.id
 			};
 
@@ -171,7 +172,7 @@ var ImagifyGulp = function () {
 					} catch (e) {
 
 						response.success = false;
-						response.error = 'An error occured';
+						response.error = 'Unknown error occured';
 
 						err = true;
 					}
@@ -213,7 +214,7 @@ var ImagifyGulp = function () {
 
 					self._each(response);
 
-					delete self.images[data.image_id];
+					delete self.images[data.id];
 
 					if (self.images_ids.length > 0) {
 
