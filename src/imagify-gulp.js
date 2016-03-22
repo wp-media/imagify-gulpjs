@@ -215,13 +215,12 @@ class ImagifyGulp {
 					
 				self._each(response)
 
-				delete self.images[ data.id ]
-
-				console.log('IMAGES LEFT: ', self.images_ids)
+				//delete self.images[ data.id ]
 
 				if ( self.images_ids.length > 0 ) {
 
 					self.process( self.images_ids.shift() )
+					console.log('IMAGES LEFT (' + self.images_ids.length + '): ', self.images_ids)
 
 				} else {
 
