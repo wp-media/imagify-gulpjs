@@ -57,7 +57,7 @@ class ImagifyGulp {
 	run () {
 		let cpt = this.images_ids.length > this.buffer_size ? this.buffer_size : this.images_ids.length
 
-		for ( let i = 0; i <= cpt; i++ ) {
+		for ( let i = 0; i < cpt; i++ ) {
 			let id = this.images_ids.shift()
 			this.process(id)
 		}
@@ -127,7 +127,10 @@ class ImagifyGulp {
 				data.thumbnail = self.default_thumb
 			}
 
-			self._before(data)
+			let before_data = data
+			before_data.id  = data.image_id
+			
+			self._before(before_data)
 
 			self.send(data)
 
@@ -184,17 +187,20 @@ class ImagifyGulp {
 						self.global_gain           += json_data.overall_saving
 						self.global_percent         = (100 - ((self.global_optimized_size / self.global_optimized_size) * 100)).toFixed(2)
 
-						response.original_size         = json_data.original_size
-						response.original_size_human   = self.humanSize(json_data.original_size)
+						response.original_size       = json_data.original_size
+						response.original_size_human = self.humanSize(json_data.original_size)
 						
-						response.new_size              = json_data.new_size
-						response.new_size_human        = self.humanSize(json_data.new_size)
+						response.new_size       = json_data.new_size
+						response.new_size_human = self.humanSize(json_data.new_size)
 						
-						//response.percent               =  (100 - ((json_data.new_size / json_data.original_size) * 100)).toFixed(2)
-						response.percent               = json_data.percent
-						response.thumbnails            = json_data.thumbnails
-						response.overall_saving        = json_data.overall_saving
-						response.original_overall_size = json_data.original_overall_size
+						response.percent    = json_data.percent
+						response.thumbnails = json_data.thumbnails
+						
+						response.overall_saving       = json_data.overall_saving
+						response.overall_saving_human = self.humanSize(json_data.overall_saving)
+						
+						response.original_overall_size       = json_data.original_overall_size
+						response.original_overall_size_human = self.humanSize(json_data.original_overall_size)
 						
 					} else {
 						response.error = json_data.error
