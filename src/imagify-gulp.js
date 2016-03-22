@@ -145,7 +145,8 @@ class ImagifyGulp {
 			, json      = {}
 			, response  = {
 				filename: data.filename,
-				image: data.id
+				image: data.image_id,
+				error: ''
 			}
 
 		transport.onreadystatechange = function () {
