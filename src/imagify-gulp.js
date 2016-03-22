@@ -217,6 +217,8 @@ class ImagifyGulp {
 
 				delete self.images[ data.id ]
 
+				console.log('IMAGES LEFT: ', self.images_ids)
+
 				if ( self.images_ids.length > 0 ) {
 
 					self.process( self.images_ids.shift() )
@@ -228,6 +230,12 @@ class ImagifyGulp {
 					if ( self.global_original_size != 0 ) {
 						tmp_global_percent = ( ( 100 - ( 100 * ( self.global_optimized_size / self.global_original_size ) ) ).toFixed(2) )
 					}
+
+					console.log('DONE!', {
+						global_original_size_human : self.humanSize( self.global_original_size ),
+						global_gain_human          : self.humanSize( self.global_gain ),
+						global_percent             : tmp_global_percent
+					});
 
 					self._done({
 						global_original_size_human : self.humanSize( self.global_original_size ),
