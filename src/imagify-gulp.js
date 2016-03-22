@@ -84,6 +84,7 @@ class ImagifyGulp {
 			, image = new Image
 
 		image.onerror = function () {
+			data.id = data.image_id
 			self._before(data)
 			self.send(data)
 		}
@@ -228,6 +229,6 @@ class ImagifyGulp {
 
 		transport.open( 'POST', this.lib_url, true )
 		transport.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' )
-		transport.send( 'image=' + data.id )
+		transport.send( 'image=' + data.image_id )
 	}
 }
