@@ -84,8 +84,12 @@ class ImagifyGulp {
 			, image = new Image
 
 		image.onerror = function () {
-			data.id = data.image_id
-			self._before(data)
+			let data_before = data 
+			data_before.id  = data.image_id
+			
+			console.log('BEFORE: ', data_before)
+			
+			self._before(data_before)
 			self.send(data)
 		}
 
@@ -206,6 +210,8 @@ class ImagifyGulp {
 						response.error = json_data.error
 					}
 				}
+
+				console.log('EACH: ', response);
 					
 				self._each(response)
 
