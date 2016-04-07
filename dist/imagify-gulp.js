@@ -1,5 +1,5 @@
 /*
- * imagify-gulpjs - version 0.0.1 - 2016-03-22
+ * imagify-gulpjs - version 0.0.1 - 2016-04-07
  * WP Media <contact@wp-media.me>
  */
 'use strict';
@@ -32,6 +32,7 @@ var ImagifyGulp = function () {
 		this.global_optimized_size = 0;
 		this.global_gain = 0;
 		this.global_percent = 0;
+		this.context = settings.context || 'wp';
 	}
 
 	_createClass(ImagifyGulp, [{
@@ -251,7 +252,7 @@ var ImagifyGulp = function () {
 
 			transport.open('POST', this.lib_url, true);
 			transport.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			transport.send('image=' + data.image_id);
+			transport.send('image=' + data.image_id + '&context=' + this.context);
 		}
 	}]);
 
