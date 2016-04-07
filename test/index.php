@@ -69,12 +69,11 @@
 			$(this).prop('disabled', true);
 
 			$.get('get_images.php').then( function (response) {
-
-				console.log( 'IMAGES: ' + Object.keys( response.data ).length );
 				
 				var Gulp = new ImagifyGulp({
 					lib: 'optimize.php',
-					images: response.data
+					images: response.data,
+					context: 'wp'
 				});
 
 				Gulp

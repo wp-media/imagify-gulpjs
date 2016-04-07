@@ -2,7 +2,7 @@
 
 header( 'Content-Type: application/json' );
 
-sleep( rand(1, 5) );
+sleep( rand(1, 3) );
 
 $min_size = 10000;
 $max_size = 200000;
