@@ -1,5 +1,5 @@
 /*
- * imagify-gulpjs - version 0.0.1 - 2016-04-07
+ * imagify-gulpjs - version 0.0.1 - 2017-07-27
  * WP Media <contact@wp-media.me>
  */
 'use strict';
@@ -79,6 +79,13 @@ var ImagifyGulp = function () {
 				this.process(id);
 			}
 
+			return this;
+		}
+	}, {
+		key: 'stopProcess',
+		value: function stopProcess() {
+			this.total_images = this.total_images - this.images_ids.length;
+			this.images_ids = [];
 			return this;
 		}
 	}, {
