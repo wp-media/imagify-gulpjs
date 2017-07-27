@@ -67,6 +67,12 @@ class ImagifyGulp {
 		return this
 	}
 
+	stopProcess () {
+		this.total_images = this.total_images - this.images_ids.length;
+		this.images_ids   = [];
+		return this
+	}
+
 	process (id) {
 		this.inprocess_images++
 
