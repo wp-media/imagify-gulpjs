@@ -48,11 +48,11 @@ class ImagifyGulp {
 
 	humanSize (bytes) {
 		if ( bytes == 0 ) return '0kb'
-		
+
 		let
 			sizes = ['b', 'kb', 'mb']
 			, i   = parseInt( Math.floor( Math.log(bytes) / Math.log(1024) ) )
-		
+
 		return ( bytes / Math.pow(1024, i) ).toFixed(2) + sizes[i]
 	}
 
@@ -67,6 +67,12 @@ class ImagifyGulp {
 		return this
 	}
 
+	stopProcess () {
+		this.total_images = this.total_images - this.images_ids.length;
+		this.images_ids   = [];
+		return this
+	}
+
 	process (id) {
 		this.inprocess_images++
 
@@ -78,7 +84,7 @@ class ImagifyGulp {
 			thumbnail: this.default_thumb,
 			error: ''
 		}
-		
+
 		this.createThumb(data)
 	}
 
@@ -88,15 +94,15 @@ class ImagifyGulp {
 			, image = new Image
 
 		image.onerror = function () {
-			let data_before = data 
+			let data_before = data
 			data_before.id  = data.image_id
-			
+
 			self._before(data_before)
 			self.send(data)
 		}
 
 		image.onload = function () {
-			let 
+			let
 				maxWidth      = 33
 				, maxHeight   = 33
 				, imageWidth  = image.width
@@ -118,12 +124,12 @@ class ImagifyGulp {
 			}
 
 			canvas = document.createElement('canvas')
-			
+
 			canvas.width  = newWidth;
 			canvas.height = newHeight;
 			image.width   = newWidth;
 			image.height  = newHeight;
-			
+
 			ctx = canvas.getContext('2d')
 			ctx.drawImage( this, 0, 0, newWidth, newHeight )
 
@@ -135,7 +141,7 @@ class ImagifyGulp {
 
 			let before_data = data
 			before_data.id  = data.image_id
-			
+
 			self._before(before_data)
 
 			self.send(data)
@@ -148,7 +154,7 @@ class ImagifyGulp {
 
 	send (data) {
 
-		let 
+		let
 			self        = this
 			, transport = new XMLHttpRequest
 			, err       = false
@@ -196,24 +202,24 @@ class ImagifyGulp {
 
 						response.original_size       = json_data.original_size
 						response.original_size_human = self.humanSize(json_data.original_size)
-						
+
 						response.new_size       = json_data.new_size
 						response.new_size_human = self.humanSize(json_data.new_size)
-						
+
 						response.percent    = json_data.percent
 						response.thumbnails = json_data.thumbnails
-						
+
 						response.overall_saving       = json_data.overall_saving
 						response.overall_saving_human = self.humanSize(json_data.overall_saving)
-						
+
 						response.original_overall_size       = json_data.original_overall_size
 						response.original_overall_size_human = self.humanSize(json_data.original_overall_size)
-						
+
 					} else {
 						response.error = json_data.error
 					}
 				}
-					
+
 				self._each(response)
 
 				if ( self.inprocess_images < self.total_images ) {
@@ -223,7 +229,7 @@ class ImagifyGulp {
 				if ( self.processed_images == self.total_images ) {
 
 					let tmp_global_percent = 0
-					
+
 					if ( self.global_original_size != 0 ) {
 						tmp_global_percent = ( ( 100 - ( 100 * ( self.global_optimized_size / self.global_original_size ) ) ).toFixed(2) )
 					}
