@@ -182,7 +182,7 @@ var ImagifyGulp = function () {
 			};
 
 			transport.onreadystatechange = function () {
-				if (this.readyState === 4) {
+				if (4 === this.readyState) {
 
 					self.processed_images++;
 
@@ -204,7 +204,7 @@ var ImagifyGulp = function () {
 
 						response.success = json.success;
 
-						if (json.success === true) {
+						if (true === json.success) {
 
 							self.total_original_size += json_data.original_size;
 							self.total_optimized_size += json_data.new_size;
@@ -240,11 +240,11 @@ var ImagifyGulp = function () {
 						self.process(self.images_ids.shift());
 					}
 
-					if (self.processed_images == self.total_images) {
+					if (self.processed_images === self.total_images) {
 
 						var tmp_global_percent = 0;
 
-						if (self.global_original_size != 0) {
+						if (0 !== self.global_original_size) {
 							tmp_global_percent = (100 - 100 * (self.global_optimized_size / self.global_original_size)).toFixed(2);
 						}
 
