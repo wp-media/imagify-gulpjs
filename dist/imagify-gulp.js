@@ -95,7 +95,7 @@ var ImagifyGulp = function () {
 
 			var data = {
 				id: id,
-				image_id: parseInt(id.toString().substr(1)),
+				image_id: parseInt(id.toString().substr(1), 10),
 				image_src: this.images[id],
 				filename: this.images[id].split('/').pop(),
 				thumbnail: this.default_thumb,

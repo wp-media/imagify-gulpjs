@@ -51,7 +51,7 @@ class ImagifyGulp {
 
 		let
 			sizes = ['B', 'kB', 'MB']
-			, i   = parseInt( Math.floor( Math.log(bytes) / Math.log(1024) ), 10)
+			, i   = parseInt( Math.floor( Math.log(bytes) / Math.log(1024) ), 10 )
 
 		return ( bytes / Math.pow(1024, i) ).toFixed(2) + '\u00A0' + sizes[i]
 	}
@@ -78,7 +78,7 @@ class ImagifyGulp {
 
 		let data = {
 			id: id,
-			image_id: parseInt( id.toString().substr(1) ),
+			image_id: parseInt( id.toString().substr(1), 10 ),
 			image_src: this.images[id],
 			filename: this.images[id].split('/').pop(),
 			thumbnail: this.default_thumb,
